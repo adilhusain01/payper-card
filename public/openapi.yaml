@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: PayPer Card API
+  description: API for provisioning Lithic virtual cards after Sui USDC settlement through x402.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+paths:
+  /api/provision:
+    post:
+      summary: Provision a card through Sui x402
+      description: Returns HTTP 402 with Sui USDC payment requirements until the request is retried with a valid payment-signature header.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionRequest'
+      responses:
+        '200':
+          description: Card provisioned successfully after Sui x402 settlement
+        '402':
+          description: Sui USDC payment required
+  /api/demo/run-agent:
+    post:
+      summary: Provision a card through the visual demo path
+      description: Uses the configured funded Sui account to send USDC directly, then allocates a Lithic virtual card.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionRequest'
+      responses:
+        '200':
+          description: Card provisioned successfully
+  /api/cards:
+    get:
+      summary: List cards provisioned during this server process
+      responses:
+        '200':
+          description: A list of active in-memory card records
+components:
+  schemas:
+    ProvisionRequest:
+      type: object
+      required:
+        - merchant
+        - amount
+      properties:
+        merchant:
+          type: string
+          example: Hetzner Cloud
+        amount:
+          type: string
+          description: USDC amount with up to 6 decimals
+          example: '15.00'

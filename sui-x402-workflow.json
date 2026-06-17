@@ -1,0 +1,80 @@
+{
+  "name": "Provision Visa Card via Sui x402",
+  "description": "Agent-driven workflow that settles USDC on Sui through an x402 facilitator and provisions a Lithic Visa card.",
+  "trigger": {
+    "type": "webhook",
+    "name": "Agent Provision Request",
+    "schema": {
+      "merchant": "string",
+      "amount": "string",
+      "idempotencyKey": "string"
+    }
+  },
+  "nodes": [
+    {
+      "id": "request-provision",
+      "type": "http",
+      "name": "Request PayPer Card",
+      "config": {
+        "method": "POST",
+        "url": "{{env.PAYPER_CARD_URL}}/api/provision",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "merchant": "{{trigger.merchant}}",
+          "amount": "{{trigger.amount}}"
+        }
+      }
+    },
+    {
+      "id": "handle-sui-x402",
+      "type": "sui-x402",
+      "name": "Sign and Settle Sui USDC Payment",
+      "dependsOn": ["request-provision"],
+      "config": {
+        "network": "sui:{{env.SUI_NETWORK}}",
+        "asset": "{{env.SUI_USDC_COIN_TYPE}}",
+        "facilitatorUrl": "{{env.X402_FACILITATOR_URL}}",
+        "payerKeyRef": "{{env.SUI_WALLET_KEY_REF}}",
+        "paymentRequiredHeader": "{{request-provision.headers.payment-required}}"
+      }
+    },
+    {
+      "id": "retry-provision",
+      "type": "http",
+      "name": "Retry with Payment Signature",
+      "dependsOn": ["handle-sui-x402"],
+      "config": {
+        "method": "POST",
+        "url": "{{env.PAYPER_CARD_URL}}/api/provision",
+        "headers": {
+          "Content-Type": "application/json",
+          "payment-signature": "{{handle-sui-x402.paymentSignature}}"
+        },
+        "body": {
+          "merchant": "{{trigger.merchant}}",
+          "amount": "{{trigger.amount}}"
+        }
+      }
+    },
+    {
+      "id": "notify-agent",
+      "type": "http",
+      "name": "Return Card Details to Agent Webhook",
+      "dependsOn": ["retry-provision"],
+      "config": {
+        "method": "POST",
+        "url": "{{env.AGENT_CALLBACK_URL}}",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "status": "success",
+          "txHash": "{{retry-provision.body.settlement.transaction}}",
+          "cardDetails": "{{retry-provision.body.card}}"
+        }
+      }
+    }
+  ]
+}

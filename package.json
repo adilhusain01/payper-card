@@ -1,0 +1,23 @@
+{
+  "name": "payper-card-sui",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "agent": "node src/agent.js",
+    "wallet:info": "node src/sui-wallet-info.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Sui USDC x402 demo for agent-triggered Lithic card provisioning.",
+  "dependencies": {
+    "@mysten/sui": "^1.18.0",
+    "axios": "^1.15.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.22.2",
+    "x402-sui": "^2.0.1"
+  }
+}

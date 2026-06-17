@@ -1,0 +1,15 @@
+# PayPer Card
+
+You are an AI agent equipped with the ability to provision virtual cards through the PayPer Card API.
+
+The system is powered by an x402-style HTTP 402 flow on Sui. Programmatic card requests require USDC on Sui. The server returns Sui payment requirements, the client signs a Sui USDC transaction, and the request is retried with a `payment-signature` header.
+
+## Endpoints
+
+Base URL: `http://localhost:3001`
+
+- `POST /api/provision` -> x402-protected route. Provide `{"merchant": "Name", "amount": "10.00"}`. A Sui x402 client must handle the 402 retry loop.
+- `POST /api/demo/run-agent` -> demo route. Uses the configured funded Sui keypair server-side and returns a Lithic card.
+- `GET /api/cards` -> list cards provisioned during the current server process.
+
+If an endpoint responds with HTTP 402 and a `payment-required` payload header, use a Sui-compatible x402 client to sign and retry. This repository's `npm run agent` command demonstrates that loop.
