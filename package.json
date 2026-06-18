@@ -11,7 +11,7 @@
     "wallet:info": "node src/sui-wallet-info.js"
   },
   "dependencies": {
-    "@mysten/sui": "^2.19.0",
+    "@mysten/sui": "^1.45.2",
     "axios": "^1.18.0",
     "dotenv": "^17.4.2",
     "next": "16.2.9",

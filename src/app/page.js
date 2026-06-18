@@ -15,13 +15,13 @@ export default function Home() {
     <div className="min-h-screen bg-white text-black">
       <Navbar />
       <main>
-        <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 border-b-2 border-black px-6 py-16 md:py-24 lg:grid-cols-2">
+        <section className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-14 border-b-2 border-black px-6 py-16 md:py-24 lg:grid-cols-2">
           <div className="space-y-8">
             <div className="inline-block border-2 border-black bg-black px-3 py-1 font-mono text-sm font-bold text-white brutal-shadow-sm">
               DEMO READY ON SUI TESTNET
             </div>
             <div className="space-y-5">
-              <h1 className="max-w-3xl text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl">
+              <h1 className="max-w-3xl text-5xl font-bold leading-[0.98] tracking-tight md:text-6xl xl:text-7xl">
                 Agent-triggered card provisioning.
               </h1>
               <p className="max-w-xl text-lg font-medium leading-8 text-gray-800 md:text-xl">
@@ -45,7 +45,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex h-[430px] flex-col justify-between border-2 border-black bg-x402-code p-6 font-mono text-sm leading-7 brutal-shadow">
+          <div className="flex min-h-[430px] flex-col justify-between overflow-hidden border-2 border-black bg-x402-code p-6 font-mono text-sm leading-6 brutal-shadow">
             <div>
               <div className="mb-5 flex items-center gap-2 border-b-2 border-black pb-4">
                 <div className="h-3 w-3 rounded-full border border-black bg-red-500" />
@@ -55,18 +55,18 @@ export default function Home() {
                   Provisioning Loop
                 </div>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {conversation.map(([sender, text, tone]) => (
-                  <div key={`${sender}-${text}`} className={`flex gap-2 ${tone}`}>
-                    <span className="self-start border border-current px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-widest">
+                  <div key={`${sender}-${text}`} className={`flex min-w-0 gap-2 ${tone}`}>
+                    <span className="shrink-0 self-start border border-current px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-widest">
                       {sender}
                     </span>
-                    <span className="flex-1">{text}</span>
+                    <span className="min-w-0 flex-1 break-words">{text}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase text-x402">
+            <div className="mt-5 flex items-center gap-2 text-xs font-bold uppercase text-x402">
               <div className="h-2 w-2 animate-pulse rounded-full bg-x402" />
               Sui x402 facilitator connected
             </div>

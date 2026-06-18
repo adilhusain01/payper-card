@@ -11,6 +11,12 @@ function formatSettlement(settlement) {
   return settlement.txHash || settlement.transaction || settlement.digest || "N/A";
 }
 
+function formatErrorPayload(data) {
+  if (!data || typeof data !== "object") return "Unknown error";
+  const detail = typeof data.details === "string" ? data.details : JSON.stringify(data.details);
+  return detail ? `${data.error}: ${detail}` : data.error || JSON.stringify(data);
+}
+
 export default function DemoRunner() {
   const [merchant, setMerchant] = useState("Hetzner Cloud");
   const [amount, setAmount] = useState("1.00");
@@ -55,7 +61,7 @@ export default function DemoRunner() {
       const data = await response.json();
 
       if (!response.ok || !data.card) {
-        appendLog(`Execution Failed: ${JSON.stringify(data)}`, "text-red-400");
+        appendLog(`Execution Failed: ${formatErrorPayload(data)}`, "text-red-400");
         return;
       }
 
@@ -163,7 +169,7 @@ export default function DemoRunner() {
         </div>
       </section>
 
-      <section className="sticky top-24 flex h-[620px] flex-col border-2 border-black bg-black font-mono text-sm text-white brutal-shadow">
+      <section className="sticky top-24 flex h-[620px] min-w-0 flex-col border-2 border-black bg-black font-mono text-sm text-white brutal-shadow">
         <div className="flex items-center gap-2 border-b-2 border-white bg-x402-code p-3 text-black">
           <div className="h-3 w-3 rounded-full border border-black bg-red-500" />
           <div className="h-3 w-3 rounded-full border border-black bg-yellow-400" />
@@ -174,7 +180,7 @@ export default function DemoRunner() {
         </div>
         <div className="terminal-scrollbar flex-1 space-y-2 overflow-y-auto p-4">
           {logs.map((log) => (
-            <div key={log.id} className={log.tone}>
+            <div key={log.id} className={`${log.tone} break-words`}>
               {log.time ? <span className="text-gray-500">[{log.time}] </span> : null}
               <span>{log.text}</span>
             </div>

@@ -10,7 +10,7 @@ export function Navbar({ badge = "SUI X402" }) {
         >
           PayPer<span className="text-x402">Card</span>
         </Link>
-        <div className="flex items-center gap-5 text-sm font-bold">
+        <div className="flex min-w-0 items-center gap-4 text-sm font-bold">
           <Link href="/resources" className="hidden transition-colors hover:text-x402 md:block">
             Resources
           </Link>
@@ -22,11 +22,11 @@ export function Navbar({ badge = "SUI X402" }) {
           </a>
           <Link
             href="/demo"
-            className="border-2 border-black bg-black px-4 py-2 text-white brutal-shadow-sm transition-colors hover:bg-white hover:text-black"
+            className="inline-flex h-10 min-w-24 items-center justify-center border-2 border-black bg-x402 px-4 font-bold text-white brutal-shadow-sm transition-colors hover:bg-white hover:text-black"
           >
-            Demo
+            Open Demo
           </Link>
-          <div className="hidden bg-x402 px-3 py-1 font-mono text-xs text-white brutal-shadow-sm sm:block">
+          <div className="hidden border-2 border-black bg-white px-3 py-1 font-mono text-xs text-black brutal-shadow-sm xl:block">
             {badge}
           </div>
         </div>
