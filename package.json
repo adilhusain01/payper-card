@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "agent": "node src/agent.js",
-    "wallet:info": "node src/sui-wallet-info.js"
+    "wallet:info": "node src/sui-wallet-info.js",
+    "check:ready": "node src/check-ready.js"
   },
   "dependencies": {
     "@mysten/sui": "^1.45.2",
