@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #050505;
+  --x402: #155dfc;
+  --x402-green: #0a7739;
+  --x402-orange: #ba4705;
+  --x402-subtle: #f5f6fa;
+  --x402-code: #f1f1f1;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-x402: var(--x402);
+  --color-x402-green: var(--x402-green);
+  --color-x402-orange: var(--x402-orange);
+  --color-x402-subtle: var(--x402-subtle);
+  --color-x402-code: var(--x402-code);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.brutal-shadow {
+  box-shadow: 4px 4px 0 0 #000;
+}
+
+.brutal-shadow-hover {
+  transition:
+    box-shadow 140ms ease,
+    transform 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.brutal-shadow-hover:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 0 #000;
+  transform: translate(2px, 2px);
+}
+
+.brutal-shadow-sm {
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.terminal-scrollbar {
+  scrollbar-color: #35df7f #000;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 1s linear infinite;
+}

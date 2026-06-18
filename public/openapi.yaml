@@ -4,7 +4,7 @@ info:
   description: API for provisioning Lithic virtual cards after Sui USDC settlement through x402.
   version: 1.0.0
 servers:
-  - url: http://localhost:3001
+  - url: http://localhost:3000
 paths:
   /api/provision:
     post:

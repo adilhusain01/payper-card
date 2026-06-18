@@ -6,7 +6,7 @@ The system is powered by an x402-style HTTP 402 flow on Sui. Programmatic card r
 
 ## Endpoints
 
-Base URL: `http://localhost:3001`
+Base URL: `http://localhost:3000`
 
 - `POST /api/provision` -> x402-protected route. Provide `{"merchant": "Name", "amount": "10.00"}`. A Sui x402 client must handle the 402 retry loop.
 - `POST /api/demo/run-agent` -> demo route. Uses the configured funded Sui keypair server-side and returns a Lithic card.

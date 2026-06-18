@@ -6,6 +6,7 @@ The protected product endpoint is `POST /api/provision`. A client calls it norma
 
 ## What Changed for Sui
 
+- Runs as a Next.js App Router project created from `create-next-app`, ready for Vercel deployment.
 - Uses `x402-sui` for the programmatic HTTP 402 buyer/seller loop.
 - Uses `@mysten/sui` for direct Sui wallet settlement in the visual demo.
 - Defaults to Circle native USDC on Sui testnet:
@@ -42,7 +43,7 @@ sequenceDiagram
 Create `.env` in the repo root:
 
 ```bash
-PORT=3001
+PORT=3000
 SUI_NETWORK=testnet
 SUI_PRIVATE_KEY=suiprivkey1...
 SUI_WALLET_ADDRESS=0x...
@@ -66,19 +67,26 @@ For testnet, fund the Sui wallet with SUI for gas and Circle testnet USDC. For m
 ```bash
 npm install
 npm run wallet:info
-npm start
+npm run dev
 ```
 
 Open:
 
-- Home: http://localhost:3001/
-- Visual demo: http://localhost:3001/demo
-- Resources: http://localhost:3001/resources
+- Home: http://localhost:3000/
+- Visual demo: http://localhost:3000/demo
+- Resources: http://localhost:3000/resources
 
 Run the Sui x402 CLI buyer:
 
 ```bash
 npm run agent
+```
+
+Build the production app locally:
+
+```bash
+npm run build
+npm start
 ```
 
 ## API
@@ -89,7 +97,10 @@ npm run agent
 
 ## Deployment Notes
 
+- Deploy the repo as a normal Vercel Next.js project. Vercel will run `npm run build`.
+- Add the same `.env` values in Vercel Project Settings -> Environment Variables.
 - Set `X402_PAY_TO_ADDRESS` to the Sui address that should receive USDC.
 - Keep `SUI_PRIVATE_KEY` server-side only. The visual demo uses it for simulated settlement.
 - If using BlockEden, configure `X402_FACILITATOR_URL=https://x402.blockeden.xyz` and `X402_FACILITATOR_API_KEY` or `BLOCKEDEN_API_KEY`.
+- The API routes use the Node.js runtime because Sui signing and facilitator settlement need server-side Node packages.
 - The current demo stores provisioned card metadata in memory. Use persistent storage before production use.

@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-package-lock.json
 yarn.lock
 
 # Environment variables
@@ -20,6 +19,9 @@ Thumbs.db
 *~
 
 # Build/dist
+.next/
+.vercel/
+out/
 dist/
 build/
 

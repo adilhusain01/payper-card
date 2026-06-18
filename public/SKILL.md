@@ -8,17 +8,17 @@ The production-style route uses an x402 HTTP 402 loop on Sui. The demo route use
 
 ```bash
 # Demo route: settles from the configured Sui keypair, then provisions a card
-curl -X POST http://localhost:3001/api/demo/run-agent \
+curl -X POST http://localhost:3000/api/demo/run-agent \
   -H "Content-Type: application/json" \
   -d '{"merchant": "Hetzner Cloud", "amount": "15.00"}'
 
 # Programmatic route: requires Sui x402 payment-signature retry flow
-curl -X POST http://localhost:3001/api/provision \
+curl -X POST http://localhost:3000/api/provision \
   -H "Content-Type: application/json" \
   -d '{"merchant": "Hetzner Cloud", "amount": "15.00"}'
 
 # List cards created during this server process
-curl http://localhost:3001/api/cards
+curl http://localhost:3000/api/cards
 ```
 
 ## Typical Flow

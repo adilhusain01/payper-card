@@ -7,7 +7,7 @@ const {
 } = require('x402-sui');
 const { getSuiNetwork, loadSuiKeypair } = require('./sui');
 
-const SERVER_URL = process.env.API_URL || 'http://localhost:3001';
+const SERVER_URL = process.env.API_URL || 'http://localhost:3000';
 
 async function requestVisaCard() {
   const keypair = loadSuiKeypair();
