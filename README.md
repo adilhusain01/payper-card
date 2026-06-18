@@ -98,6 +98,7 @@ npm start
 ## Deployment Notes
 
 - Deploy the repo as a normal Vercel Next.js project. Vercel will run `npm run build`.
+- `vercel.json` pins the Next.js framework preset, npm install/build/dev commands, API response headers, and static asset cache headers.
 - Add the same `.env` values in Vercel Project Settings -> Environment Variables.
 - Set `X402_PAY_TO_ADDRESS` to the Sui address that should receive USDC.
 - Keep `SUI_PRIVATE_KEY` server-side only. The visual demo uses it for simulated settlement.

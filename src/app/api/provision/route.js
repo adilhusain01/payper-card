@@ -11,6 +11,7 @@ import {
 } from "@/lib/x402-sui";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 function paymentHeaders(paymentRequiredHeader, paymentResponseHeader) {
   const headers = {
