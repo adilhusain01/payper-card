@@ -1,14 +1,6 @@
 import Link from "next/link";
 import { Footer, Navbar } from "@/components/Shell";
-
-const conversation = [
-  ["Agent", "Your cloud invoice is due. Should I handle payment for you?", "text-black"],
-  ["User", "Yes. Use USDC on Sui and keep it within the purchase limit.", "text-x402"],
-  ["Agent", "> POST /api/provision { merchant: 'Apple Inc', amount: 5.00 }", "text-gray-600"],
-  ["Server", "HTTP 402 Payment Required: Sui USDC signature needed.", "text-x402-orange"],
-  ["Agent", "Signing the challenge with the funded Sui account...", "text-x402"],
-  ["Server", "HTTP 200 OK: Merchant-locked virtual card issued.", "text-x402-green"],
-];
+import ProvisioningLoop from "@/components/ProvisioningLoop";
 
 export default function Home() {
   return (
@@ -45,32 +37,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex min-h-[430px] flex-col justify-between overflow-hidden border-2 border-black bg-x402-code p-6 font-mono text-sm leading-6 brutal-shadow">
-            <div>
-              <div className="mb-5 flex items-center gap-2 border-b-2 border-black pb-4">
-                <div className="h-3 w-3 rounded-full border border-black bg-red-500" />
-                <div className="h-3 w-3 rounded-full border border-black bg-yellow-400" />
-                <div className="h-3 w-3 rounded-full border border-black bg-green-500" />
-                <div className="ml-3 text-xs font-bold uppercase tracking-widest text-gray-600">
-                  Provisioning Loop
-                </div>
-              </div>
-              <div className="space-y-2">
-                {conversation.map(([sender, text, tone]) => (
-                  <div key={`${sender}-${text}`} className={`flex min-w-0 gap-2 ${tone}`}>
-                    <span className="shrink-0 self-start border border-current px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-widest">
-                      {sender}
-                    </span>
-                    <span className="min-w-0 flex-1 break-words">{text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-5 flex items-center gap-2 text-xs font-bold uppercase text-x402">
-              <div className="h-2 w-2 animate-pulse rounded-full bg-x402" />
-              Sui x402 facilitator connected
-            </div>
-          </div>
+          <ProvisioningLoop />
         </section>
 
         <section className="mx-auto grid max-w-6xl grid-cols-1 gap-10 border-b-2 border-black px-6 py-16 md:grid-cols-3 md:py-24">

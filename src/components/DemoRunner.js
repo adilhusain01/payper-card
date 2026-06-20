@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import VirtualCard from "@/components/VirtualCard";
 
 function nowTime() {
   return new Date().toISOString().split("T")[1].slice(0, 8);
@@ -153,20 +154,9 @@ export default function DemoRunner() {
             <span>{runLabel}</span>
           </button>
 
-          {card ? (
-            <div className="mt-4 border-2 border-black bg-x402-code p-3 font-mono text-xs">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-x402">
-                PAN Revealed
-              </span>
-              <div className="mt-1 inline-block border border-black bg-white p-1 text-base font-bold text-black">
-                {card.pan}
-              </div>
-              <div className="mt-2">
-                CVV: {card.cvv} | EXP: {card.exp_month}/{card.exp_year}
-              </div>
-            </div>
-          ) : null}
         </div>
+
+        {card ? <VirtualCard card={card} merchant={merchant} amount={amount} /> : null}
       </section>
 
       <section className="sticky top-24 flex h-[620px] min-w-0 flex-col border-2 border-black bg-black font-mono text-sm text-white brutal-shadow">
