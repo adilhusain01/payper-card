@@ -1,107 +1,130 @@
-# PayPer Card on Sui
+# PayPer Card
 
-PayPer Card provisions a Lithic virtual card after a Sui USDC payment clears through an x402-style HTTP 402 flow.
+PayPer Card gives AI agents controlled access to the card economy using Sui USDC. An agent requests a merchant and spending limit, completes an HTTP 402 payment challenge, and receives a merchant-locked Lithic virtual card after the signed payment settles on Sui.
 
-The protected product endpoint is `POST /api/provision`. A client calls it normally, receives a `402 Payment Required` response, signs a Sui USDC transfer, retries with the payment payload, and gets a merchant-locked Lithic card after settlement. The visual demo route, `POST /api/demo/run-agent`, uses the configured funded Sui account directly so judges can see the end-to-end card flow without wiring a browser wallet.
+Every purchase is bounded by an explicit amount and merchant, while the Sui transaction provides an auditable settlement receipt.
 
-## What Changed for Sui
+## Product Flow
 
-- Runs as a Next.js App Router project created from `create-next-app`, ready for Vercel deployment.
-- Uses `x402-sui` for the programmatic HTTP 402 buyer/seller loop.
-- Uses `@mysten/sui` for direct Sui wallet settlement in the visual demo.
-- Defaults to Circle native USDC on Sui testnet:
-  `0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC`
-- Supports mainnet with Circle native USDC:
-  `0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC`
-- Defaults the facilitator URL to `https://x402.blockeden.xyz`, overrideable with `X402_FACILITATOR_URL`.
-
-## Flow
+1. An agent calls `POST /api/provision` with a merchant and USDC amount.
+2. PayPer Card returns `402 Payment Required` with Sui USDC payment requirements.
+3. The x402 client builds and signs the Sui transaction, then retries with a `payment-signature` header.
+4. PayPer Card validates the requirement, dry-runs the transaction, and submits it to Sui.
+5. After settlement, Lithic creates a merchant-locked virtual card with the approved limit.
+6. The response includes the card details and Sui transaction digest.
 
 ```mermaid
 sequenceDiagram
     participant Agent
-    participant Server as PayPer Card Server
-    participant Facilitator as Sui x402 Facilitator
+    participant API as PayPer Card
     participant Sui
     participant Lithic
 
-    Agent->>Server: POST /api/provision
-    Server-->>Agent: 402 Payment Required (Sui USDC requirement)
-    Agent->>Agent: Build and sign Sui USDC transfer
-    Agent->>Server: Retry with payment-signature header
-    Server->>Facilitator: POST /settle
-    Facilitator->>Sui: Broadcast signed transfer
-    Sui-->>Facilitator: Transaction digest
-    Facilitator-->>Server: Settlement result
-    Server->>Lithic: Create merchant-locked card
-    Lithic-->>Server: Card details
-    Server-->>Agent: 200 OK + card + settlement
+    Agent->>API: POST /api/provision
+    API-->>Agent: 402 + Sui USDC requirement
+    Agent->>Agent: Build and sign transaction
+    Agent->>API: Retry with payment-signature
+    API->>Sui: Dry-run signed transaction
+    Sui-->>API: Validated effects
+    API->>Sui: Execute transaction
+    Sui-->>API: Settlement digest
+    API->>Lithic: Create merchant-locked card
+    Lithic-->>API: Virtual card
+    API-->>Agent: 200 + card + settlement
+```
+
+## Stack
+
+- Next.js App Router and React
+- Sui testnet or mainnet
+- Circle native USDC on Sui
+- x402 v2 payment challenge and retry flow
+- Self-facilitated Sui verification and settlement
+- Lithic sandbox card issuance
+- Vercel deployment
+
+## Sui Assets
+
+Testnet native USDC:
+
+```text
+0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC
+```
+
+Mainnet native USDC:
+
+```text
+0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC
 ```
 
 ## Environment
 
-Create `.env` in the repo root:
+Copy `.env.example` to `.env` and configure:
 
 ```bash
 PORT=3000
+API_URL=http://localhost:3000
+
 SUI_NETWORK=testnet
+SUI_RPC_URL=https://fullnode.testnet.sui.io:443
 SUI_PRIVATE_KEY=suiprivkey1...
 SUI_WALLET_ADDRESS=0x...
 X402_PAY_TO_ADDRESS=0x...
-X402_FACILITATOR_URL=https://x402.blockeden.xyz
-X402_FACILITATOR_API_KEY=...
+SUI_USDC_COIN_TYPE=
 
-# Optional overrides
-SUI_RPC_URL=https://fullnode.testnet.sui.io:443
-SUI_USDC_COIN_TYPE=0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC
+X402_FACILITATOR_MODE=self
 X402_MAX_TIMEOUT_SECONDS=300
 
-# Lithic sandbox
 LITHIC_API_KEY=...
 ```
 
-For testnet, fund the Sui wallet with SUI for gas and Circle testnet USDC. For mainnet, set `SUI_NETWORK=mainnet` and use the mainnet USDC coin type or omit `SUI_USDC_COIN_TYPE` to use the built-in default.
+`X402_FACILITATOR_MODE=self` validates and broadcasts the signed transaction from the Next.js API route. To use a hosted facilitator, set the mode to `external` and provide `X402_FACILITATOR_URL` and `X402_FACILITATOR_API_KEY`.
+
+Fund the payer wallet with SUI for gas and USDC for settlement. Use a separate treasury address for `X402_PAY_TO_ADDRESS` when testing real value transfer.
 
 ## Run Locally
 
 ```bash
 npm install
-npm run wallet:info
+npm run check:ready
 npm run dev
 ```
 
-Open:
-
-- Home: http://localhost:3000/
+- App: http://localhost:3000
 - Visual demo: http://localhost:3000/demo
 - Resources: http://localhost:3000/resources
 
-Run the Sui x402 CLI buyer:
+Run the autonomous x402 buyer:
 
 ```bash
 npm run agent
 ```
 
-Build the production app locally:
+Inspect the configured wallet:
 
 ```bash
-npm run build
-npm start
+npm run wallet:info
 ```
 
 ## API
 
-- `POST /api/provision`: x402-protected Sui USDC route. Requires a Sui payment through the `payment-signature` retry flow.
-- `POST /api/demo/run-agent`: direct demo settlement from the configured Sui keypair, then Lithic card creation.
-- `GET /api/cards`: in-memory list of cards provisioned during this server process.
+### `POST /api/provision`
 
-## Deployment Notes
+The production x402 route. It returns a Sui USDC payment challenge, accepts the signed retry, settles the transaction, and provisions a card.
 
-- Deploy the repo as a normal Vercel Next.js project. Vercel will run `npm run build`.
-- `vercel.json` pins the Next.js framework preset, npm install/build/dev commands, API response headers, and static asset cache headers.
-- Add the same `.env` values in Vercel Project Settings -> Environment Variables.
-- Set `X402_PAY_TO_ADDRESS` to the Sui address that should receive USDC.
-- Keep `SUI_PRIVATE_KEY` server-side only. The visual demo uses it for simulated settlement.
-- If using BlockEden, configure `X402_FACILITATOR_URL=https://x402.blockeden.xyz` and `X402_FACILITATOR_API_KEY` or `BLOCKEDEN_API_KEY`.
-- The API routes use the Node.js runtime because Sui signing and facilitator settlement need server-side Node packages.
-- The current demo stores provisioned card metadata in memory. Use persistent storage before production use.
+### `POST /api/demo/run-agent`
+
+The visual demo route. It executes settlement with the configured server-side Sui account and returns the resulting Lithic card.
+
+### `GET /api/cards`
+
+Returns card records created during the current server process. The demo uses in-memory storage; production deployments should use encrypted persistent storage and strict access controls.
+
+## Deploy to Vercel
+
+1. Import the repository as a Next.js project.
+2. Add the environment variables from `.env.example` in Vercel Project Settings.
+3. Keep `SUI_PRIVATE_KEY` and `LITHIC_API_KEY` server-side.
+4. Deploy using the included `vercel.json` configuration.
+
+The settlement routes use the Node.js runtime with a 60-second execution window for Sui confirmation and card provisioning.

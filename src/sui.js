@@ -47,7 +47,7 @@ function formatUsdcUnits(units) {
   return fraction ? `${whole}.${fraction}` : whole.toString();
 }
 
-function loadSuiKeypair(secret = process.env.SUI_PRIVATE_KEY || process.env.FUNDED_WALLET_PRIVATE_KEY) {
+function loadSuiKeypair(secret = process.env.SUI_PRIVATE_KEY) {
   if (!secret) {
     throw new Error('Missing SUI_PRIVATE_KEY for Sui settlement.');
   }

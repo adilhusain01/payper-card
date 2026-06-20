@@ -40,7 +40,7 @@ export async function POST(request) {
   const { merchant, amount } = provisionRequest;
   const payTo = getPayToAddress();
   if (!payTo) {
-    return jsonError("Missing X402_PAY_TO_ADDRESS or SUI_PAY_TO_ADDRESS for Sui x402 settlement.", 500);
+    return jsonError("Missing X402_PAY_TO_ADDRESS for Sui x402 settlement.", 500);
   }
 
   let paymentRequirements;

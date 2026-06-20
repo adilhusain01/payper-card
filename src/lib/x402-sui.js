@@ -387,7 +387,7 @@ function normalizeAddress(value) {
 }
 
 function getFacilitatorAuthHeaders() {
-  const apiKey = process.env.X402_FACILITATOR_API_KEY || process.env.BLOCKEDEN_API_KEY;
+  const apiKey = process.env.X402_FACILITATOR_API_KEY;
   if (!apiKey) return {};
 
   return {

@@ -46,7 +46,7 @@ async function checkFacilitator(url, warnings) {
 
   try {
     const verifier = new X402PaymentVerifier(url);
-    const apiKey = process.env.X402_FACILITATOR_API_KEY || process.env.BLOCKEDEN_API_KEY;
+    const apiKey = process.env.X402_FACILITATOR_API_KEY;
     if (apiKey) {
       Object.assign(verifier.httpClient.defaults.headers.common, {
         Authorization: `Bearer ${apiKey}`,
@@ -74,15 +74,15 @@ async function main() {
   const network = getSuiNetwork();
   const keypair = loadSuiKeypair();
   const walletAddress = keypair.toSuiAddress();
-  const configuredWallet = process.env.SUI_WALLET_ADDRESS || process.env.FUNDED_WALLET_ADDRESS;
-  const payTo = process.env.X402_PAY_TO_ADDRESS || process.env.SUI_PAY_TO_ADDRESS;
+  const configuredWallet = process.env.SUI_WALLET_ADDRESS;
+  const payTo = process.env.X402_PAY_TO_ADDRESS;
   const demoAmount = process.env.DEMO_AMOUNT || '1.00';
   const facilitatorUrl = process.env.X402_FACILITATOR_URL || 'https://x402.blockeden.xyz';
   const facilitatorMode = (process.env.X402_FACILITATOR_MODE || 'self').toLowerCase();
 
   requiredEnv('SUI_PRIVATE_KEY', errors);
   requiredEnv('LITHIC_API_KEY', errors);
-  check(Boolean(payTo), 'Payment receiver address is set', 'X402_PAY_TO_ADDRESS or SUI_PAY_TO_ADDRESS is missing', warnings, errors);
+  check(Boolean(payTo), 'Payment receiver address is set', 'X402_PAY_TO_ADDRESS is missing', warnings, errors);
 
   if (configuredWallet) {
     check(

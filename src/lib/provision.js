@@ -9,7 +9,7 @@ export function jsonError(message, status = 400, details) {
 }
 
 export function getPayToAddress() {
-  return process.env.X402_PAY_TO_ADDRESS || process.env.SUI_PAY_TO_ADDRESS;
+  return process.env.X402_PAY_TO_ADDRESS;
 }
 
 export async function parseProvisionRequest(request) {

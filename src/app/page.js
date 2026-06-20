@@ -61,7 +61,7 @@ export default function Home() {
                 App Router APIs, ready for Vercel.
               </h2>
               <p className="mb-8 text-lg leading-8 text-gray-800">
-                The Express server has been replaced by Next route handlers, so the UI and payment APIs deploy as one Vercel project.
+                The interface, x402 payment flow, Sui settlement, and card APIs deploy together as one Vercel project.
               </p>
               <ul className="space-y-4 font-mono text-sm font-medium text-gray-800">
                 <li className="flex items-center gap-3"><span className="bg-black px-2 py-0.5 text-white">GET</span> /demo</li>

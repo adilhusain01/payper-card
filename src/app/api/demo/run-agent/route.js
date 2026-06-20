@@ -22,7 +22,7 @@ export async function POST(request) {
   const { merchant, amount } = provisionRequest;
   const payToAddress = getPayToAddress();
   if (!payToAddress) {
-    return jsonError("Missing X402_PAY_TO_ADDRESS or SUI_PAY_TO_ADDRESS for Sui settlement.", 500);
+    return jsonError("Missing X402_PAY_TO_ADDRESS for Sui settlement.", 500);
   }
 
   try {
